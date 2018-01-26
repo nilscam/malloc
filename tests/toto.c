@@ -4,7 +4,7 @@
 
 int	main()
 {
-	char	*str = malloc(sizeof(10));
+	char	*str = malloc(17);
 
 	strcpy(str, "Bonjour");
 	printf("%s\n", str);

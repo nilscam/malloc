@@ -5,9 +5,11 @@
 ##
 ##
 
+#-ansi -pedantic
+
 SRC	=	malloc.c
 
-FLAGS	=	-ansi -pedantic -fpic -c -W -Wall -Wextra -Werror
+FLAGS	=	-W -Wall -Wextra -Werror
 
 CPL	=	gcc
 
@@ -17,12 +19,12 @@ OBJ	=	$(SRC:.c=.o)
 
 all:	$(NAME)
 
-$(NAME):$(OBJ)
-	$(CPL) $(OBJ) $(FLAGS)
-	$(CPL) -o $(NAME) $(OBJ) -shared
+$(NAME):
+	$(CPL) -c -fPIC $(SRC) $(FLAGS)
+	$(CPL) -shared -o $(NAME) $(OBJ)
 
 clean:
-	rm -f *.o
+	rm -f $(OBJ)
 	rm -f *~
 
 fclean: clean
