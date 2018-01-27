@@ -5,43 +5,25 @@
 ** 
 */
 
-#include <unistd.h>
-#include <stdlib.h>
-#include <stdio.h>
+#include "malloc.h"
 
-#define FULL 0xF
-#define MAX_OPTI_SIZE 0x3FFFFFFFFFFFFFFF
+//brk place le break à une adresse
+//sbrk return la somme de l'adresse de break et du parametre
 
-void	*heap_start;
-void    *heap_end;
-
-
-size_t	my_opalloc(size_t n)
-{
-        size_t	nb = n - 1;
-	size_t	drop = 31;
-
-	if (n > MAX_OPTI_SIZE)
-		return n;
-	while (drop > 0)
-		nb |= nb >> drop--;
-	return (nb + 1) << 1;
-}
+static void     *heap_start = NULL;
 
 void	*malloc(size_t size)
 {
-	printf("nb = %zu\n", my_opalloc(size));
+	if (!heap_start)
+		heap_start = sbrk(0);
+	return allocate(heap_start, size);
+}
 
-	heap_start = sbrk(0);
-
-	printf("brk = %d\n", brk(sbrk(100)));
-
-	//printf("brk = l%d\n", brk(heap_start));
-	
-	return heap_start;
+void    *realloc(__attribute__((unused))void *ptr, __attribute__((unused))size_t size)
+{
+	return NULL;
 }
 
 void	free(__attribute__((unused))void *data)
 {
-	brk(heap_start);
 }

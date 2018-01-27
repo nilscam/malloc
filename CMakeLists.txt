@@ -3,4 +3,4 @@ project(untitled1 C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_library(libmy_malloc.so SHARED malloc.c malloc.h)
+add_library(libmy_malloc SHARED malloc.c malloc.h allocate.c)
