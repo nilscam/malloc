@@ -15,6 +15,7 @@
 void	*heap_start;
 void    *heap_end;
 
+
 size_t	my_opalloc(size_t n)
 {
         size_t	nb = n - 1;
@@ -35,7 +36,7 @@ void	*malloc(size_t size)
 
 	printf("brk = %d\n", brk(sbrk(100)));
 
-	//printf("brk = %d\n", brk(heap_start));
+	//printf("brk = l%d\n", brk(heap_start));
 	
 	return heap_start;
 }
