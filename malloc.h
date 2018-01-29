@@ -77,22 +77,19 @@ typedef struct s_chunk chunk;
 
 
 
-#define IS_EXIST(size_ptr) ((*(size_ptr)) & EXIST_MASK)
-#define SET_EXIST(size_ptr) ((*(size_ptr)) |= EXIST_MASK)
-#define UNSET_EXIST(size_ptr) ((*(size_ptr)) &= ~EXIST_MASK)
+#define IS_EXIST(size_ptr) ((size_ptr) & EXIST_MASK)
+#define SET_EXIST(size_ptr) ((size_ptr) |= EXIST_MASK)
+#define UNSET_EXIST(size_ptr) ((size_ptr) &= ~EXIST_MASK)
 
-#define IS_FREE(size_ptr) (((*(size_ptr)) & FREE_MASK) >> 1)
-#define SET_FREE(size_ptr) ((*(size_ptr)) &= ~FREE_MASK)
-#define UNSET_FREE(size_ptr) ((*(size_ptr)) |= FREE_MASK)
+#define IS_FREE(size_ptr) (((size_ptr) & FREE_MASK) >> 1)
+#define SET_FREE(size_ptr) ((size_ptr) &= ~FREE_MASK)
+#define UNSET_FREE(size_ptr) ((size_ptr) |= FREE_MASK)
 
-#define IS_USED(size_ptr) (((*(size_ptr)) & USED_MASK) >> 2)
-#define SET_USED(size_ptr) ((*(size_ptr)) |= USED_MASK)
-#define UNSET_USED(size_ptr) ((*(size_ptr)) &= ~USED_MASK)
+#define IS_USED(size_ptr) (((size_ptr) & USED_MASK) >> 2)
+#define SET_USED(size_ptr) ((size_ptr) |= USED_MASK)
+#define UNSET_USED(size_ptr) ((size_ptr) &= ~USED_MASK)
 
 
-
-#define SET_PREV_CHUNK_SIZE(cur, prev) ((cur)->mchunk_prev_size = \
-	((cur) - (prev)) + ((prev)->mchunk_size & CHUNK_ALIGN_MASK))
 
 void    *allocate(size_t);
 
