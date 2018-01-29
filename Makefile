@@ -21,13 +21,13 @@ all:	$(NAME)
 
 $(NAME):
 	$(CPL) -c -fPIC $(SRC) $(FLAGS)
-	$(CPL) -shared -o $(NAME) $(OBJ)
+	$(CPL) -shared -o $(NAME) $(OBJ) -lpthread
 
 clean:
 	rm -f $(OBJ)
 	rm -f *~
 
 fclean: clean
-	rm $(NAME)
+	rm -f $(NAME)
 
 re:	fclean all

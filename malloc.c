@@ -10,13 +10,30 @@
 //brk place le break à une adresse
 //sbrk return la somme de l'adresse de break et du parametre
 
-static void     *heap_start = NULL;
+pthread_mutex_t		mutex = PTHREAD_MUTEX_INITIALIZER;
+
+void			*trylock_thread()
+{
+	if (pthread_mutex_trylock(&mutex) != 0)
+		exit(0);
+	return (NULL);
+}
+
+void			*unlock_thread()
+{
+	if (pthread_mutex_unlock(&mutex) != 0)
+		exit(0);
+	return (NULL);
+}
 
 void	*malloc(size_t size)
 {
-	if (!heap_start)
-		heap_start = sbrk(0);
-	return allocate(heap_start, size);
+	void    *ptr;
+
+	trylock_thread();
+	ptr = allocate(size);
+	unlock_thread();
+	return ptr;
 }
 
 void    *realloc(__attribute__((unused))void *ptr, __attribute__((unused))size_t size)
@@ -26,4 +43,7 @@ void    *realloc(__attribute__((unused))void *ptr, __attribute__((unused))size_t
 
 void	free(__attribute__((unused))void *data)
 {
+	trylock_thread();
+
+	unlock_thread();
 }
