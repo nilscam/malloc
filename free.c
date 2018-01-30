@@ -17,7 +17,7 @@ chunk   *rebase_tree(chunk *root)
 		save = it;
 		it = it->smaller;
 	}
-	save->smaller = NULL;
+	save->smaller = it->bigger;
 	return it;
 }
 
@@ -68,13 +68,14 @@ void    add_to_tree(chunk *to_add, chunk **free_tree)
 void    combine_chunk(chunk *to_combine, chunk **free_tree)
 {
 	chunk   *second = NEXT(to_combine);
+	size_t  new_size = combine_size_chunk(to_combine, second);
 
-	to_combine->mchunk_size = combine_size_chunk(to_combine, second);
 	*free_tree = remove_from_tree(*free_tree, to_combine);
 	*free_tree = remove_from_tree(*free_tree, second);
 
 	// TODO : rajouter une tentative de diminution de la heap, sinon ajout à l'arbre binaire
 
+	to_combine->mchunk_size = new_size;
 	add_to_tree(to_combine, free_tree);
 }
 
