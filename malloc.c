@@ -7,6 +7,8 @@
 
 #include "malloc.h"
 
+static chunk  *free_tree = NULL;
+
 //brk place le break à une adresse
 //sbrk return la somme de l'adresse de break et du parametre
 
@@ -41,9 +43,9 @@ void    *realloc(__attribute__((unused))void *ptr, __attribute__((unused))size_t
 	return NULL;
 }
 
-void	free(__attribute__((unused))void *data)
+void	free(void *mem)
 {
 	trylock_thread();
-
+	discharge(mem, &free_tree);
 	unlock_thread();
 }

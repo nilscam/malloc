@@ -5,7 +5,6 @@
 #include "malloc.h"
 
 static chunk    *last_chunk = NULL;
-//static chunk  *first_free_chunck = NULL;
 
 void    *create_new_chunck(size_t request)
 {
@@ -36,4 +35,3 @@ void    *allocate(size_t request)
 	}
 	return create_new_chunck(request);
 }
-
