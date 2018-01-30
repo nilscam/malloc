@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <zconf.h>
+#include <unistd.h>
 #include <pthread.h>
 
 /*
@@ -49,7 +50,15 @@ struct  s_chunk {
 	struct s_chunk  *smaller;
 	struct s_chunk  *bigger;
 };
+
 typedef struct s_chunk chunk;
+
+/* Malloc boolean */
+typedef char mbool;
+#define SUCCESS 0
+#define FAILURE 1
+/* */
+
 
 /* mask */
 #define CHUNK_ALIGN_MASK 0x7
@@ -66,10 +75,19 @@ typedef struct s_chunk chunk;
 /* */
 
 /* management chunk */
-#define NEXT(chunk) ((chunk)->mchunk_size + (chunk))
-#define PREV(chunk) ((chunk) - (chunk)->mchunk_prev_size)
-#define move_tree(it, size_to_add) (((it)->mchunk_size > (size_to_add)) ? \
+#define NEXT(chunk) (clean_size((chunk)->mchunk_size) + (chunk))
+#define PREV(chunk) ((chunk) - clean_size((chunk)->mchunk_prev_size))
+#define move_tree(it, size_to_add) ((clean_size((it)->mchunk_size) > clean_size((size_to_add))) ? \
 					(it)->smaller : (it)->bigger)
+/* */
+
+/* chunk comparaisons */
+#define cmp_chunk_grt(chk1, chk2) (clean_size((chk1)->mchunk_size) > \
+					clean_size((chk2)->mchunk_size))
+#define cmp_chunk_lrt(chk1, chk1) (clean_size((chk1)->mchunk_size) < \
+					clean_size((chk2)->mchunk_size))
+#define cmp_chunk_lrt_oe(chk1, chk2) (clean_size((chk1)->mchunk_size) <= \
+					clean_size((chk2)->mchunk_size))
 /* */
 
 /* ptr/size conversion */
@@ -77,16 +95,17 @@ typedef struct s_chunk chunk;
 #define mem2chunk(mem) ((chunk*)(((char*)(mem)) - CHUNK_HEADER_SIZE))
 #define schunk2smem(s) ((s) - CHUNK_HEADER_SIZE)
 #define smem2schunk(s) ((s) + CHUCK_HEADER_SIZE)
+#define clean_size(size) ((size) & REVERSE_CHUNK_ALIGN_MASK)
 /* */
 
 
 /* logic calcul */
-#define request2mem(size) (((size) + CHUNK_ALIGN_MASK) & REVERSE_CHUNK_ALIGN_MASK)
+#define request2mem(size) (clean_size((size) + CHUNK_ALIGN_MASK))
 #define request2chunk(size) (((request2mem(size)) > MIN_SIZE) ? request2mem(size) + CHUNK_HEADER_SIZE : MIN_CHUNK_SIZE)
 #define request_oor(size) ((size) >= (-2*CHUNK_HEADER_SIZE))
-#define combine_size_chunk(first, second) (((first)->mchunk_size & REVERSE_CHUNK_ALIGN_MASK) \
-					+ ((second)->mchunk_size & REVERSE_CHUNK_ALIGN_MASK) \
-					+ ((second)->mchunk_size & CHUNK_ALIGN_MASK))
+#define combine_size_chunk(first, second) ((clean_size((first)->mchunk_size))\
+				+ (clean_size((second)->mchunk_size))\
+				+ ((second)->mchunk_size & CHUNK_ALIGN_MASK))
 /* */
 
 /* setters / conditions */

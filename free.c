@@ -27,9 +27,9 @@ chunk   *remove_from_tree(chunk *root, chunk *to_remove)
 
 	if (!to_remove)
 		return root;
-	if (root->mchunk_size > to_remove->mchunk_size)
+	if (cmp_chunk_grt(root, to_remove))
 		root->smaller = remove_from_tree(root->smaller, to_remove);
-	else if (root->mchunk_size <= to_remove->mchunk_size && root != to_remove)
+	else if (cmp_chunk_lrt_oe(root, to_remove) && root != to_remove)
 		root->bigger = remove_from_tree(root->bigger, to_remove);
 	else {
 		if (!root->smaller)
@@ -58,7 +58,7 @@ void    add_to_tree(chunk *to_add, chunk **free_tree)
 			save = it;
 			it = move_tree(it, to_add->mchunk_size);
 		}
-		if (save->mchunk_size > to_add->mchunk_size)
+		if (cmp_chunk_grt(save, to_add))
 			save->smaller = to_add;
 		else
 			save->bigger = to_add;
