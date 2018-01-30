@@ -10,7 +10,7 @@
 static chunk  *free_tree = NULL;
 
 //brk place le break à une adresse
-//sbrk return la somme de l'adresse de break et du parametre
+//sbrk return la somme de l'adresse de break et du parametre avant l'allocation mémoire
 
 pthread_mutex_t		mutex = PTHREAD_MUTEX_INITIALIZER;
 
@@ -38,12 +38,18 @@ void	*malloc(size_t size)
 	return ptr;
 }
 
-void    *realloc(__attribute__((unused))void *ptr, __attribute__((unused))size_t size)
+void    *realloc(void *mem, size_t size) // todo : se fait tout seul
 {
-	return NULL;
+	void    *ptr;
+
+	trylock_thread();
+	discharge(mem, &free_tree);
+	ptr = allocate(size);
+	unlock_thread();
+	return ptr;
 }
 
-void	free(void *mem)
+void	free(void *mem) // todo : rajouter une libération de heap, sinon finis
 {
 	trylock_thread();
 	discharge(mem, &free_tree);

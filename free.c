@@ -74,7 +74,7 @@ void    combine_chunk(chunk *to_combine, chunk **free_tree)
 	*free_tree = remove_from_tree(*free_tree, second);
 
 	// TODO : rajouter une tentative de diminution de la heap, sinon ajout à l'arbre binaire
-	
+
 	add_to_tree(to_combine, free_tree);
 }
 
