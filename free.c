@@ -73,10 +73,9 @@ void    combine_chunk(chunk *to_combine, chunk **free_tree)
 	*free_tree = remove_from_tree(*free_tree, to_combine);
 	*free_tree = remove_from_tree(*free_tree, second);
 
-	// TODO : rajouter une tentative de diminution de la heap, sinon ajout à l'arbre binaire
-
 	to_combine->mchunk_size = new_size;
-	add_to_tree(to_combine, free_tree);
+	if (reduce_heap(to_combine) == FAILURE)
+		add_to_tree(to_combine, free_tree);
 }
 
 void    discharge(void *mem, chunk **free_tree)

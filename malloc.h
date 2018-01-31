@@ -106,6 +106,8 @@ typedef char mbool;
 #define combine_size_chunk(first, second) ((clean_size((first)->mchunk_size))\
 				+ (clean_size((second)->mchunk_size))\
 				+ ((second)->mchunk_size & CHUNK_ALIGN_MASK))
+#define align_increase_heap(size, pagesize) (((size) + (pagesize) - 1) & ~((pagesize) - 1))
+#define align_reduce_heap(size, pagesize) ((size) & ~((pagesize) -1))
 /* */
 
 /* setters / conditions */
@@ -125,5 +127,7 @@ typedef char mbool;
 
 void    *allocate(size_t);
 void    discharge(void *, chunk **);
+mbool   reduce_heap(chunk *);
+mbool   increase_heap(size_t);
 
 #endif //_malloc_H_
