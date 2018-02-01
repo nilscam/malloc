@@ -25,18 +25,12 @@ chunk   *search_best_spot(size_t request, chunk *root_tree)
 			(!best || clean_size(best->mchunk_size) >
 			          clean_size(it->mchunk_size))) {
 			best = it;
-			//goto start_tricks;
 			if (clean_size(best->mchunk_size) == request)
 				return best;
 		}
-		//end_tricks:
 		it = move_tree(it, request);
 	}
 	return best;
-	/*start_tricks:
-	if (clean_size(best->mchunk_size) == request)
-		return best;
-	goto end_tricks;*/
 }
 
 void    split_chunk(chunk **free_tree, chunk *to_split, size_t request)
@@ -49,7 +43,7 @@ void    split_chunk(chunk **free_tree, chunk *to_split, size_t request)
 		full_size = clean_size(to_split->mchunk_size);
 		to_split->mchunk_size -= (full_size - request);
 		second = NEXT(to_split);
-		second->mchunk_prev_size = to_split->mchunk_size:
+		second->mchunk_prev_size = to_split->mchunk_size;
 		second->mchunk_size = (full_size - request);
 		SET_EXIST(to_split->mchunk_size);
 		UNSET_FREE(to_split->mchunk_size);

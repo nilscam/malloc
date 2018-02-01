@@ -7,6 +7,7 @@
 
 #include <stddef.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <errno.h>
 #include <zconf.h>
 #include <unistd.h>
@@ -23,7 +24,7 @@
  * | row data : min size 8     |
  * | // if free                |
  * | // xor_link: a xor linked |
- * | // list implementation    |
+ * | // list implementation    |printf
  * +---------------------------+
  *
  * Size of chunk representation (4 bytes):
@@ -75,8 +76,10 @@ typedef char mbool;
 /* */
 
 /* management chunk */
-#define NEXT(chunk) (clean_size((chunk)->mchunk_size) + (chunk))
-#define PREV(chunk) ((chunk) - clean_size((chunk)->mchunk_prev_size))
+#define NEXT(chk) ((chunk*)(clean_size((chk)->mchunk_size) + \
+		((unsigned long long int)(chk))))
+#define PREV(chk) ((chunk*)(((unsigned long long int)(chk)) - \
+		clean_size((chk)->mchunk_prev_size)))
 #define move_tree(it, size_to_add) ((clean_size((it)->mchunk_size) > clean_size((size_to_add))) ? \
 					(it)->smaller : (it)->bigger)
 /* */
@@ -84,7 +87,7 @@ typedef char mbool;
 /* chunk comparaisons */
 #define cmp_chunk_grt(chk1, chk2) (clean_size((chk1)->mchunk_size) > \
 					clean_size((chk2)->mchunk_size))
-#define cmp_chunk_lrt(chk1, chk1) (clean_size((chk1)->mchunk_size) < \
+#define cmp_chunk_lrt(chk1, chk2) (clean_size((chk1)->mchunk_size) < \
 					clean_size((chk2)->mchunk_size))
 #define cmp_chunk_lrt_oe(chk1, chk2) (clean_size((chk1)->mchunk_size) <= \
 					clean_size((chk2)->mchunk_size))
@@ -124,6 +127,14 @@ typedef char mbool;
 #define UNSET_USED(size_ptr) ((size_ptr) &= ~USED_MASK)
 /* */
 
+/* debug */
+#define print_header(chk) printf("+----------------------------------+\n\
+|%34zu|\n\
+|%34zu|\n\
++----------------------------------+\n",\
+(chk)->mchunk_prev_size, (chk)->mchunk_size)
+
+/* */
 
 void    *allocate(size_t, chunk **free_tree);
 void    discharge(void *, chunk **);
@@ -131,5 +142,7 @@ mbool   reduce_heap(chunk *);
 void    *increase_heap(size_t);
 chunk   *remove_from_tree(chunk *, chunk *);
 void    add_to_tree(chunk *, chunk **);
+void    show_alloc_mem();
+void    dump_memory(chunk *);
 
 #endif //_malloc_H_

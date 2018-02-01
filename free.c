@@ -71,7 +71,10 @@ void    combine_chunk(chunk *to_combine, chunk **free_tree)
 	size_t  new_size = combine_size_chunk(to_combine, second);
 
 	*free_tree = remove_from_tree(*free_tree, to_combine);
+
+	printf("here: %s, %d\n", __FILE__, __LINE__);
 	*free_tree = remove_from_tree(*free_tree, second);
+	printf("here: %s, %d\n", __FILE__, __LINE__);
 
 	to_combine->mchunk_size = new_size;
 	if (reduce_heap(to_combine) == FAILURE)
@@ -85,6 +88,7 @@ void    discharge(void *mem, chunk **free_tree)
 
 	SET_FREE(chunck->mchunk_size);
 	add_to_tree(chunck, free_tree);
+	print_header(chunck);
 	if (IS_EXIST(chunck->mchunk_size) && IS_FREE(tmp->mchunk_size)) {
 		combine_chunk(chunck, free_tree);
 	}

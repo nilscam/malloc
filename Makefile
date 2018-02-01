@@ -7,7 +7,11 @@
 
 #-ansi -pedantic
 
-SRC	=	malloc.c
+SRC	=	malloc.c	\
+		free.c		\
+		allocate.c	\
+		manage_heap.c	\
+		debug.c
 
 FLAGS	=	-W -Wall -Wextra -Werror
 
