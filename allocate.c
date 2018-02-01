@@ -4,13 +4,10 @@
 
 #include "malloc.h"
 
-static chunk    *last_chunk = NULL;
-
 void    *create_new_chunck(size_t request)
 {
-	chunk   *new = sbrk(0);
+	chunk   *new = increase_heap(request);
 
-	sbrk(request);
 	if (last_chunk) {
 		new->mchunk_prev_size = last_chunk->mchunk_size;
 		SET_EXIST(last_chunk->mchunk_size);

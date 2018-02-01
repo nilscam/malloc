@@ -49,7 +49,7 @@ void    *realloc(void *mem, size_t size) // todo : se fait tout seul
 	return ptr;
 }
 
-void	free(void *mem) // todo : rajouter une libération de heap, sinon finis
+void	free(void *mem)
 {
 	trylock_thread();
 	discharge(mem, &free_tree);

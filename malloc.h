@@ -128,6 +128,6 @@ typedef char mbool;
 void    *allocate(size_t);
 void    discharge(void *, chunk **);
 mbool   reduce_heap(chunk *);
-mbool   increase_heap(size_t);
+void    *increase_heap(size_t);
 
 #endif //_malloc_H_
