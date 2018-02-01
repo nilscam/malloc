@@ -9,7 +9,7 @@ static size_t   page_padding = 0;
 static void     *brk_addr = NULL;
 static chunk    *last_chunk = NULL;
 
-void    set_prev_no_next(chunk *to_remove)
+void    remove_last(chunk *to_remove)
 {
 	if (IS_EXIST(to_remove->mchunk_prev_size)) {
 		last_chunk = PREV(to_remove);
@@ -17,11 +17,15 @@ void    set_prev_no_next(chunk *to_remove)
 	}
 }
 
-void    set_prev_next(chunk *to_add) // todo : call this method
+void    add_last(chunk *to_add)
 {
-	if (last_chunk)
+	if (last_chunk) {
+		to_add->mchunk_prev_size = last_chunk->mchunk_size;
 		SET_EXIST(last_chunk->mchunk_size);
-	last_chunk = to_add;
+		SET_EXIST(to_add->mchunk_prev_size);
+	} else {
+		to_add->mchunk_prev_size = 0;
+	}
 }
 
 mbool   reduce_heap(chunk *to_free)
@@ -35,12 +39,12 @@ mbool   reduce_heap(chunk *to_free)
 		brk_addr -= clean_size(to_free->mchunk_size);
 		to_release = (long long int) align_reduce_heap(clean_size(to_free->mchunk_size), page_padding);
 		page_padding = 0;
-		set_prev_no_next(to_free);
+		remove_last(to_free);
 		sbrk(-to_release);
 		return SUCCESS;
 	} else {
 		brk_addr -= clean_size(to_free->mchunk_size);
-		set_prev_no_next(to_free);
+		remove_last(to_free);
 		return SUCCESS;
 	}
 }
@@ -53,9 +57,8 @@ void    *increase_heap(size_t request)
 	} else {
 		request -= page_padding;
 		page_padding = request % page_size;
-		brk_addr = sbrk(align_increase_heap(request, page_size)) +
-		        align_increase_heap(request, page_padding) - page_padding;
+		brk_addr = sbrk(align_increase_heap(request, page_size)) + request;
 	}
-	set_prev_next(brk_addr);
-	return brk_addr;
+	add_last(brk_addr - request);
+	return brk_addr - request;
 }

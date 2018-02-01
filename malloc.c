@@ -33,7 +33,7 @@ void	*malloc(size_t size)
 	void    *ptr;
 
 	trylock_thread();
-	ptr = allocate(size);
+	ptr = allocate(size, &free_tree);
 	unlock_thread();
 	return ptr;
 }
@@ -44,7 +44,7 @@ void    *realloc(void *mem, size_t size) // todo : se fait tout seul
 
 	trylock_thread();
 	discharge(mem, &free_tree);
-	ptr = allocate(size);
+	ptr = allocate(size, &free_tree);
 	unlock_thread();
 	return ptr;
 }

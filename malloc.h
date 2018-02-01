@@ -125,9 +125,11 @@ typedef char mbool;
 /* */
 
 
-void    *allocate(size_t);
+void    *allocate(size_t, chunk **free_tree);
 void    discharge(void *, chunk **);
 mbool   reduce_heap(chunk *);
 void    *increase_heap(size_t);
+chunk   *remove_from_tree(chunk *, chunk *);
+void    add_to_tree(chunk *, chunk **);
 
 #endif //_malloc_H_
