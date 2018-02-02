@@ -27,24 +27,23 @@ void			*unlock_thread()
 
 void	*malloc(size_t size)
 {
-	/*static int      nb_call = 0;*/
 	void    *ptr;
 
-	/*printf("%s, %s, call number %d\n", __FILE__, __func__, nb_call++);*/
+	dump_func;
 	trylock_thread();
 	show_alloc_mem();
 	ptr = allocate(size, &free_tree);
 	show_alloc_mem();
 	unlock_thread();
+	write(1, "\n\n\n", 3);
 	return ptr;
 }
 
 void    *realloc(void *mem, size_t size)
 {
-	/*static int      nb_call = 0;*/
 	void    *ptr;
 
-	/*printf("%s, %s, call number %d\n", __FILE__, __func__, nb_call++);*/
+	dump_func;
 	if (mem) {
 		trylock_thread();
 		show_alloc_mem();
@@ -52,18 +51,19 @@ void    *realloc(void *mem, size_t size)
 		ptr = allocate(size, &free_tree);
 		show_alloc_mem();
 		unlock_thread();
+		write(1, "\n\n\n", 3);
 		return ptr;
 	}
+	write(1, "\n\n\n", 3);
 	return NULL;
 }
 
 void    *calloc(size_t nmemb, size_t size)
 {
 	size_t  request = nmemb * size;
-	/*static int      nb_call = 0;*/
 	void    *ptr;
 
-	/*printf("%s, %s, call number %d\n", __FILE__, __func__, nb_call++);*/
+	dump_func;
 	if (request == 0)
 		return NULL;
 	trylock_thread();
@@ -72,14 +72,13 @@ void    *calloc(size_t nmemb, size_t size)
 	clear_mem(ptr);
 	show_alloc_mem();
 	unlock_thread();
+	write(1, "\n\n\n", 3);
 	return ptr;
 }
 
 void	free(void *mem)
 {
-	/*static int      nb_call = 0;*/
-
-	/*printf("%s, %s, call number %d\n", __FILE__, __func__, nb_call++);*/
+	dump_func;
 	if (mem) {
 		trylock_thread();
 		show_alloc_mem();
@@ -87,4 +86,5 @@ void	free(void *mem)
 		show_alloc_mem();
 		unlock_thread();
 	}
+	write(1, "\n\n\n", 3);
 }

@@ -131,16 +131,32 @@ typedef char mbool;
 /* */
 
 /* debug */
-#define print_header(chk) printf("+----------------------------------+\n\
-|%34lu|\n\
-|%34lu|\n\
-+----------------------------------+\n",\
-(chk)->mchunk_prev_size, (chk)->mchunk_size)
+#define print_header(chk) do {\
+	write(1, "+--------------START---------------+\n", 37);\
+	put_nbr(((unsigned long int)((chk)->mchunk_size)));\
+	write(1, "\n", 1);\
+	put_nbr(((unsigned long int)((chk)->mchunk_size)));\
+	write(1, "\n", 1);\
+	write(1, "+---------------END----------------+\n", 37);\
+} while (0)
+
+#define dump_func do {\
+	write(1, __func__, strlen(__func__));\
+	write(1, " - ", 3);\
+	write(1, __FILE__, strlen(__FILE__));\
+	write(1, "\n", 1);\
+} while (0)
 /* */
 
 /* system */
 void    *sbrk(intptr_t titi);
 int     getpagesize(void);
+/* */
+
+/* DEBUG */
+void    dump_memory(chunk *);
+void    put_addr(void *);
+void    put_nbr(unsigned long int);
 /* */
 
 void    clear_mem(void *);
@@ -151,6 +167,5 @@ void    *increase_heap(size_t);
 chunk   *remove_from_tree(chunk *, chunk *);
 void    add_to_tree(chunk *, chunk **);
 void    show_alloc_mem();
-void    dump_memory(chunk *);
 
 #endif /*_malloc_H_*/

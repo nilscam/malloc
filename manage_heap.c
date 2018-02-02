@@ -57,7 +57,6 @@ void    *increase_heap(size_t request)
 {
 	size_t  adjusted_request;
 
-	/*printf("Increase: wanted = %lu, page_padding = %lu", request, page_padding);*/
 	if (!page_size || !brk_addr) {
 		page_size = ((size_t)getpagesize());
 		brk_addr = sbrk(0);
@@ -75,8 +74,9 @@ void    *increase_heap(size_t request)
 }
 
 void    show_alloc_mem() {
-	printf("----HEAP_START----\n");
-	printf("break: 0x%p\n", brk_addr);
+	write(1, "----HEAP_START----\nbreak: ", 26);
+	put_addr(brk_addr);
+	write(1, "\n", 1);
 	dump_memory(last_chunk);
-	printf("----HEAP_END----\n");
+	write(1, "----HEAP_END----\n", 17);
 }
