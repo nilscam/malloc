@@ -1,10 +1,10 @@
-//l
-// Created by nils on 1/30/18.
-//
+/*
+* Created by nils on 1/30/18.
+*/
 
 #include "malloc.h"
 
-static size_t   page_size = 0; // todo : check si la fonction est compilée dans le binaire
+static size_t   page_size = 0;
 static size_t   page_padding = 0;
 static void     *brk_addr = NULL;
 static chunk    *last_chunk = NULL;
@@ -33,21 +33,21 @@ void    add_last(chunk *to_add)
 
 mbool   reduce_heap(chunk *to_free)
 {
-	long long int   to_release;
+	long int        to_release;
 
 	if (!page_size)
-		page_size = (size_t) getpagesize();
+		page_size = ((size_t)getpagesize());
 	if (IS_EXIST(to_free->mchunk_size)) {
 		return FAILURE;
 	} else if (clean_size(to_free->mchunk_size) + page_padding > page_size) {
-		brk_addr -= clean_size(to_free->mchunk_size);
-		to_release = (long long int) align_reduce_heap(clean_size(to_free->mchunk_size), page_padding);
+		brk_addr = ((char*)brk_addr) - clean_size(to_free->mchunk_size);
+		to_release = (long int) align_reduce_heap(clean_size(to_free->mchunk_size), page_padding);
 		page_padding = 0;
 		remove_last(to_free);
 		sbrk(-to_release);
 		return SUCCESS;
 	} else {
-		brk_addr -= clean_size(to_free->mchunk_size);
+		brk_addr = ((char *)brk_addr) - clean_size(to_free->mchunk_size);
 		remove_last(to_free);
 		return SUCCESS;
 	}
@@ -57,8 +57,9 @@ void    *increase_heap(size_t request)
 {
 	size_t  adjusted_request;
 
+	/*printf("Increase: wanted = %lu, page_padding = %lu", request, page_padding);*/
 	if (!page_size || !brk_addr) {
-		page_size = (size_t) getpagesize();
+		page_size = ((size_t)getpagesize());
 		brk_addr = sbrk(0);
 	}
 	if (page_padding >= request) {
@@ -68,14 +69,14 @@ void    *increase_heap(size_t request)
 		page_padding = ((page_size) - (adjusted_request % page_size));
 		sbrk(align_increase_heap(adjusted_request, page_size));
 	}
-	brk_addr += request;
-	add_last(brk_addr - request);
-	return brk_addr - request;
+	brk_addr = ((char*)brk_addr) + request;
+	add_last((chunk*)(((char*)brk_addr) - request));
+	return ((char*)brk_addr) - request;
 }
 
 void    show_alloc_mem() {
-	//printf("----HEAP_START----\n");
-	//printf("break: 0x%p\n", brk_addr);
-	//dump_memory(last_chunk);
-	//printf("----HEAP_END----\n");
+	printf("----HEAP_START----\n");
+	printf("break: 0x%p\n", brk_addr);
+	dump_memory(last_chunk);
+	printf("----HEAP_END----\n");
 }

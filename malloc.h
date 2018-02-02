@@ -1,16 +1,18 @@
-//
-// Created by nils on 1/26/18.
-//
+/*
+* Created by nils on 1/26/18.
+*/
 
 #ifndef _malloc_H_
 #define _malloc_H_
 
+#include <string.h>
+#include <stdint.h>
+#include <unistd.h>
 #include <stddef.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <errno.h>
 #include <zconf.h>
-#include <unistd.h>
 #include <pthread.h>
 
 /*
@@ -44,10 +46,10 @@
  */
 
 struct  s_chunk {
-	size_t  mchunk_prev_size;  /* Size of previous chunk (if free).  */ // set by SET_PREV_CHUNK_SIZE Macro
-	size_t	mchunk_size;       /* Size in bytes, including overhead. */ // set by SET_CHUNK_SIZE Macro
+	size_t  mchunk_prev_size;  /* Size of previous chunk (if free).  */
+	size_t	mchunk_size;       /* Size in bytes, including overhead. */
 
-	// only if free
+	/* Only if free */
 	struct s_chunk  *smaller;
 	struct s_chunk  *bigger;
 };
@@ -70,7 +72,7 @@ typedef char mbool;
 /* */
 
 /* SIZE brute */
-//#define CHUNK_HEADER_SIZE (offsetof(struct s_chunk, smaller))
+/*#define CHUNK_HEADER_SIZE (offsetof(struct s_chunk, smaller))*/
 #define CHUNK_HEADER_SIZE 16
 #define MIN_SIZE 16
 #define MIN_CHUNK_SIZE (MIN_SIZE + CHUNK_HEADER_SIZE)
@@ -78,8 +80,8 @@ typedef char mbool;
 
 /* management chunk */
 #define NEXT(chk) ((chunk*)(clean_size((chk)->mchunk_size) + \
-		((unsigned long long int)(chk))))
-#define PREV(chk) ((chunk*)(((unsigned long long int)(chk)) - \
+		((long int)((char*)(chk)))))
+#define PREV(chk) ((chunk*)(((long int)((char*)(chk))) - \
 		clean_size((chk)->mchunk_prev_size)))
 #define move_tree(it, size_to_add) ((clean_size((it)->mchunk_size) > clean_size((size_to_add))) ? \
 					(it)->smaller : (it)->bigger)
@@ -130,14 +132,19 @@ typedef char mbool;
 
 /* debug */
 #define print_header(chk) printf("+----------------------------------+\n\
-|%34zu|\n\
-|%34zu|\n\
+|%34lu|\n\
+|%34lu|\n\
 +----------------------------------+\n",\
 (chk)->mchunk_prev_size, (chk)->mchunk_size)
-
 /* */
 
-void    *allocate(size_t, chunk **free_tree);
+/* system */
+void    *sbrk(intptr_t titi);
+int     getpagesize(void);
+/* */
+
+void    clear_mem(void *);
+void    *allocate(size_t, chunk **);
 void    discharge(void *, chunk **);
 mbool   reduce_heap(chunk *);
 void    *increase_heap(size_t);
@@ -146,4 +153,4 @@ void    add_to_tree(chunk *, chunk **);
 void    show_alloc_mem();
 void    dump_memory(chunk *);
 
-#endif //_malloc_H_
+#endif /*_malloc_H_*/

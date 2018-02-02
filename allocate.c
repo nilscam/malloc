@@ -1,8 +1,15 @@
-//
-// Created by nils on 1/27/18.
-//
+/*
+* Created by nils on 1/27/18.
+*/
 
 #include "malloc.h"
+
+void    clear_mem(void *ptr)
+{
+	chunk   *chk = mem2chunk(ptr);
+
+	memset(ptr, 0, schunk2smem(clean_size(chk->mchunk_size)));
+}
 
 void    *create_new_chunck(size_t request)
 {
@@ -54,6 +61,12 @@ void    split_chunk(chunk **free_tree, chunk *to_split, size_t request)
 			next->mchunk_prev_size = second->mchunk_size;
 		}
 		add_to_tree(second, free_tree);
+	} else {
+		UNSET_FREE(to_split->mchunk_size);
+		if (IS_EXIST(to_split->mchunk_size)) {
+			next = NEXT(to_split);
+			next->mchunk_prev_size = to_split->mchunk_size;
+		}
 	}
 }
 

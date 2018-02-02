@@ -1,6 +1,6 @@
-//
-// Created by nils on 1/29/18.
-//
+/*
+* Created by nils on 1/29/18.
+*/
 
 #include "malloc.h"
 
@@ -25,7 +25,7 @@ chunk   *remove_from_tree(chunk *root, chunk *to_remove)
 {
 	chunk   *tmp;
 
-	if (!to_remove)
+	if (!to_remove || !root)
 		return root;
 	if (cmp_chunk_grt(root, to_remove))
 		root->smaller = remove_from_tree(root->smaller, to_remove);
@@ -76,8 +76,7 @@ void    combine_chunk(chunk *to_combine, chunk **free_tree)
 	to_combine->mchunk_size = new_size;
 	second = NEXT(to_combine);
 	second->mchunk_prev_size = to_combine->mchunk_size;
-	if (reduce_heap(to_combine) == FAILURE)
-		add_to_tree(to_combine, free_tree);
+	add_to_tree(to_combine, free_tree);
 }
 
 void    discharge(void *mem, chunk **free_tree)
