@@ -70,7 +70,8 @@ typedef char mbool;
 /* */
 
 /* SIZE brute */
-#define CHUNK_HEADER_SIZE (offsetof(struct s_chunk, smaller))
+//#define CHUNK_HEADER_SIZE (offsetof(struct s_chunk, smaller))
+#define CHUNK_HEADER_SIZE 16
 #define MIN_SIZE 16
 #define MIN_CHUNK_SIZE (MIN_SIZE + CHUNK_HEADER_SIZE)
 /* */
@@ -105,7 +106,7 @@ typedef char mbool;
 /* logic calcul */
 #define request2mem(size) (clean_size((size) + CHUNK_ALIGN_MASK) + CHUNK_HEADER_SIZE)
 #define request2chunk(size) (((request2mem(size)) > MIN_CHUNK_SIZE) ? request2mem(size) : MIN_CHUNK_SIZE)
-#define request_oor(size) ((size) >= (-2*CHUNK_HEADER_SIZE))
+#define request_oor(size) ((size) >= (4000000000))
 #define combine_size_chunk(first, second) ((clean_size((first)->mchunk_size))\
 				+ (clean_size((second)->mchunk_size))\
 				+ ((second)->mchunk_size & CHUNK_ALIGN_MASK))

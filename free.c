@@ -70,9 +70,7 @@ void    combine_chunk(chunk *to_combine, chunk **free_tree)
 	chunk   *second = NEXT(to_combine);
 	size_t  new_size = combine_size_chunk(to_combine, second);
 
-	printf("size combined = %zu\n", new_size);
 	*free_tree = remove_from_tree(*free_tree, to_combine);
-
 	*free_tree = remove_from_tree(*free_tree, second);
 
 	to_combine->mchunk_size = new_size;
@@ -89,8 +87,6 @@ void    discharge(void *mem, chunk **free_tree)
 
 	SET_FREE(chunck->mchunk_size);
 	add_to_tree(chunck, free_tree);
-	printf("condition combine 1: %zu && %zu\n", IS_EXIST(chunck->mchunk_size), IS_FREE(next->mchunk_size));
-	printf("condition combine 2: %zu && %zu\n", IS_EXIST(chunck->mchunk_prev_size), IS_FREE(chunck->mchunk_prev_size));
 	if (IS_EXIST(chunck->mchunk_size)) {
 		SET_FREE(next->mchunk_prev_size);
 		if (IS_FREE(next->mchunk_size)) {

@@ -13,7 +13,7 @@ SRC	=	malloc.c	\
 		manage_heap.c	\
 		debug.c
 
-FLAGS	=	-W -Wall -Wextra -Werror
+FLAGS	=	-W -Wall -Wextra -Werror -ansi -pedantic
 
 CPL	=	gcc
 

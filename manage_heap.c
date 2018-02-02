@@ -51,7 +51,6 @@ mbool   reduce_heap(chunk *to_free)
 		remove_last(to_free);
 		return SUCCESS;
 	}
-	printf("page_padding = %zu\n", page_padding);
 }
 
 void    *increase_heap(size_t request)
