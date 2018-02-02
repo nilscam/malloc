@@ -103,8 +103,8 @@ typedef char mbool;
 
 
 /* logic calcul */
-#define request2mem(size) (clean_size((size) + CHUNK_ALIGN_MASK))
-#define request2chunk(size) (((request2mem(size)) > MIN_SIZE) ? request2mem(size) + CHUNK_HEADER_SIZE : MIN_CHUNK_SIZE)
+#define request2mem(size) (clean_size((size) + CHUNK_ALIGN_MASK) + CHUNK_HEADER_SIZE)
+#define request2chunk(size) (((request2mem(size)) > MIN_CHUNK_SIZE) ? request2mem(size) : MIN_CHUNK_SIZE)
 #define request_oor(size) ((size) >= (-2*CHUNK_HEADER_SIZE))
 #define combine_size_chunk(first, second) ((clean_size((first)->mchunk_size))\
 				+ (clean_size((second)->mchunk_size))\
@@ -118,7 +118,7 @@ typedef char mbool;
 #define SET_EXIST(size_ptr) ((size_ptr) |= EXIST_MASK)
 #define UNSET_EXIST(size_ptr) ((size_ptr) &= ~EXIST_MASK)
 
-#define IS_FREE(size_ptr) (((size_ptr) & FREE_MASK) >> 1)
+#define IS_FREE(size_ptr) ((((size_ptr) & FREE_MASK) >> 1) ^ 1)
 #define SET_FREE(size_ptr) ((size_ptr) &= ~FREE_MASK)
 #define UNSET_FREE(size_ptr) ((size_ptr) |= FREE_MASK)
 

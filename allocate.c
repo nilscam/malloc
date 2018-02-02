@@ -41,7 +41,10 @@ void    split_chunk(chunk **free_tree, chunk *to_split, size_t request)
 
 	if (to_split->mchunk_size >= (request + MIN_CHUNK_SIZE)) {
 		full_size = clean_size(to_split->mchunk_size);
+		printf("fullsize = %zu\n", full_size);
+		printf("prev = %zu\n", to_split->mchunk_prev_size);
 		to_split->mchunk_size -= (full_size - request);
+		printf("to_split->mchunk_size = %zu\n", to_split->mchunk_size);
 		second = NEXT(to_split);
 		second->mchunk_prev_size = to_split->mchunk_size;
 		second->mchunk_size = (full_size - request);
@@ -53,12 +56,14 @@ void    split_chunk(chunk **free_tree, chunk *to_split, size_t request)
 			next = NEXT(second);
 			next->mchunk_prev_size = second->mchunk_size;
 		}
-		add_to_tree(to_split, free_tree);
+		add_to_tree(second, free_tree);
 	}
+	printf("split chunk\n");
 }
 
 void    *allocate(size_t request, chunk **free_tree) {
 	chunk *best_spot;
+
 
 	request = request2chunk(request);
 	if (request_oor(request)) {
@@ -67,7 +72,7 @@ void    *allocate(size_t request, chunk **free_tree) {
 	} else if ((best_spot = search_best_spot(request, *free_tree))) {
 		*free_tree = remove_from_tree(*free_tree, best_spot);
 		split_chunk(free_tree, best_spot, request);
-		return best_spot;
+		return chunk2mem(best_spot);
 	}
 	return create_new_chunck(request);
 }

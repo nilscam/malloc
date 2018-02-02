@@ -30,9 +30,10 @@ void	*malloc(size_t size)
 	void    *ptr;
 
 	trylock_thread();
-	printf("%s, %s\n", __FILE__, __func__);
+	printf("%s, %s, %zu\n", __FILE__, __func__, size);
 	show_alloc_mem();
 	ptr = allocate(size, &free_tree);
+	print_header(mem2chunk((chunk*)ptr));
 	show_alloc_mem();
 	printf("\n");
 	unlock_thread();
@@ -43,24 +44,29 @@ void    *realloc(void *mem, size_t size) // todo : se fait tout seul
 {
 	void    *ptr;
 
-	trylock_thread();
-	printf("%s, %s\n", __FILE__, __func__);
-	show_alloc_mem();
-	discharge(mem, &free_tree);
-	ptr = allocate(size, &free_tree);
-	show_alloc_mem();
-	printf("\n");
-	unlock_thread();
-	return ptr;
+	if (mem) {
+		trylock_thread();
+		printf("%s, %s, %zu, %p\n", __FILE__, __func__, size, mem);
+		show_alloc_mem();
+		discharge(mem, &free_tree);
+		ptr = allocate(size, &free_tree);
+		show_alloc_mem();
+		printf("\n");
+		unlock_thread();
+		return ptr;
+	}
+	return NULL;
 }
 
 void	free(void *mem)
 {
-	trylock_thread();
-	printf("\n%s, %s\n", __FILE__, __func__);
-	show_alloc_mem();
-	discharge(mem, &free_tree);
-	show_alloc_mem();
-	printf("\n");
-	unlock_thread();
+	if (mem) {
+		trylock_thread();
+		printf("\n%s, %s, %p\n", __FILE__, __func__, mem);
+		show_alloc_mem();
+		discharge(mem, &free_tree);
+		show_alloc_mem();
+		printf("\n");
+		unlock_thread();
+	}
 }
