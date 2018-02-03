@@ -35,7 +35,7 @@ void	*malloc(size_t size)
 	ptr = allocate(size, &free_tree);
 	show_alloc_mem();
 	unlock_thread();
-	write(1, "\n\n\n", 3);
+	padd_debug;
 	return ptr;
 }
 
@@ -51,10 +51,10 @@ void    *realloc(void *mem, size_t size)
 		ptr = allocate(size, &free_tree);
 		show_alloc_mem();
 		unlock_thread();
-		write(1, "\n\n\n", 3);
+		padd_debug;
 		return ptr;
 	}
-	write(1, "\n\n\n", 3);
+	padd_debug;
 	return NULL;
 }
 
@@ -72,7 +72,7 @@ void    *calloc(size_t nmemb, size_t size)
 	clear_mem(ptr);
 	show_alloc_mem();
 	unlock_thread();
-	write(1, "\n\n\n", 3);
+	padd_debug;
 	return ptr;
 }
 
@@ -86,5 +86,5 @@ void	free(void *mem)
 		show_alloc_mem();
 		unlock_thread();
 	}
-	write(1, "\n\n\n", 3);
+	padd_debug;
 }

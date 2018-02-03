@@ -2,7 +2,7 @@
 * Created by nils on 1/30/18.
 */
 
-#include "malloc.h"
+#include "manage_heap.h"
 
 static size_t   page_size = 0;
 static size_t   page_padding = 0;
@@ -41,13 +41,14 @@ mbool   reduce_heap(chunk *to_free)
 		return FAILURE;
 	} else if (clean_size(to_free->mchunk_size) + page_padding > page_size) {
 		brk_addr = ((char*)brk_addr) - clean_size(to_free->mchunk_size);
-		to_release = (long int) align_reduce_heap(clean_size(to_free->mchunk_size), page_padding);
-		page_padding = 0;
+		to_release = (long int) align_reduce_heap(clean_size(to_free->mchunk_size), page_size);
+		page_padding = (page_padding + clean_size(to_free->mchunk_size)) % page_size;
 		remove_last(to_free);
 		sbrk(-to_release);
 		return SUCCESS;
 	} else {
 		brk_addr = ((char *)brk_addr) - clean_size(to_free->mchunk_size);
+		page_padding += clean_size(to_free->mchunk_size);
 		remove_last(to_free);
 		return SUCCESS;
 	}
@@ -74,9 +75,12 @@ void    *increase_heap(size_t request)
 }
 
 void    show_alloc_mem() {
+#ifdef M_DEBUG
 	write(1, "----HEAP_START----\nbreak: ", 26);
 	put_addr(brk_addr);
 	write(1, "\n", 1);
-	dump_memory(last_chunk);
+	/*dump_memory(last_chunk);*/
 	write(1, "----HEAP_END----\n", 17);
+#else
+#endif
 }

@@ -2,7 +2,7 @@
 * Created by nils on 2/1/18.
 */
 
-#include "malloc.h"
+#include "manage_heap.h"
 #define DIGITS "0123456789"
 
 void    put_nbr(unsigned long int nb)

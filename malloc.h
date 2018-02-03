@@ -101,8 +101,6 @@ typedef char mbool;
 #define combine_size_chunk(first, second) ((clean_size((first)->mchunk_size))\
 				+ (clean_size((second)->mchunk_size))\
 				+ ((second)->mchunk_size & CHUNK_ALIGN_MASK))
-#define align_increase_heap(size, pagesize) (((size) + (pagesize) - 1) & ~((pagesize) - 1))
-#define align_reduce_heap(size, pagesize) ((size) & ~((pagesize) -1))
 /* */
 
 /* setters / conditions */
@@ -119,25 +117,8 @@ typedef char mbool;
 #define UNSET_USED(size_ptr) ((size_ptr) &= ~USED_MASK)
 /* */
 
-/* debug */
-#define print_header(chk) do {\
-	write(1, "+--------------START---------------+\n", 37);\
-	put_nbr(((unsigned long int)((chk)->mchunk_size)));\
-	write(1, "\n", 1);\
-	put_nbr(((unsigned long int)((chk)->mchunk_size)));\
-	write(1, "\n", 1);\
-	write(1, "+---------------END----------------+\n", 37);\
-} while (0)
-
-#define dump_func do {\
-	write(1, __func__, strlen(__func__));\
-	write(1, " - ", 3);\
-	write(1, __FILE__, strlen(__FILE__));\
-	write(1, "\n", 1);\
-} while (0)
-/* */
-
 #include "btree/btree.h"
+#include "manage_heap/manage_heap.h"
 
 /* system */
 void    *sbrk(intptr_t titi);
