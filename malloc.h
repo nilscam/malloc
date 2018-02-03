@@ -83,17 +83,6 @@ typedef char mbool;
 		((long int)((char*)(chk)))))
 #define PREV(chk) ((chunk*)(((long int)((char*)(chk))) - \
 		clean_size((chk)->mchunk_prev_size)))
-#define move_tree(it, size_to_add) ((clean_size((it)->mchunk_size) > clean_size((size_to_add))) ? \
-					(it)->smaller : (it)->bigger)
-/* */
-
-/* chunk comparaisons */
-#define cmp_chunk_grt(chk1, chk2) (clean_size((chk1)->mchunk_size) > \
-					clean_size((chk2)->mchunk_size))
-#define cmp_chunk_lrt(chk1, chk2) (clean_size((chk1)->mchunk_size) < \
-					clean_size((chk2)->mchunk_size))
-#define cmp_chunk_lrt_oe(chk1, chk2) (clean_size((chk1)->mchunk_size) <= \
-					clean_size((chk2)->mchunk_size))
 /* */
 
 /* ptr/size conversion */
@@ -148,6 +137,8 @@ typedef char mbool;
 } while (0)
 /* */
 
+#include "btree/btree.h"
+
 /* system */
 void    *sbrk(intptr_t titi);
 int     getpagesize(void);
@@ -164,8 +155,6 @@ void    *allocate(size_t, chunk **);
 void    discharge(void *, chunk **);
 mbool   reduce_heap(chunk *);
 void    *increase_heap(size_t);
-chunk   *remove_from_tree(chunk *, chunk *);
-void    add_to_tree(chunk *, chunk **);
 void    show_alloc_mem();
 
 #endif /*_malloc_H_*/

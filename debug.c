@@ -30,5 +30,4 @@ void    dump_memory(chunk *last_chunk) {
 		write(1, " bytes\n", 7);
 		print_header(last_chunk);
 	}
-
 }

@@ -13,18 +13,20 @@ SRC	=	malloc.c	\
 		manage_heap.c	\
 		debug.c
 
+MODULES	=	btree/btree.c
+
 FLAGS	=	-W -Wall -Wextra -Werror -Wno-unused-result -pedantic -ansi
 
 CPL	=	gcc
 
 NAME    =	libmy_malloc.so
 
-OBJ	=	$(SRC:.c=.o)
+OBJ	=	$(SRC:%.c=%.o) btree.o
 
 all:	$(NAME)
 
 $(NAME):
-	$(CPL) -c -fPIC $(SRC) $(FLAGS)
+	$(CPL) -c -fPIC $(SRC) $(MODULES) $(FLAGS)
 	$(CPL) -shared -o $(NAME) $(OBJ) -lpthread
 
 clean:

@@ -22,24 +22,6 @@ void    *create_new_chunck(size_t request)
 	return chunk2mem(new);
 }
 
-chunk   *search_best_spot(size_t request, chunk *root_tree)
-{
-	chunk   *it = root_tree;
-	chunk   *best = NULL;
-
-	while (it && it->mchunk_size != request) {
-		if (clean_size(it->mchunk_size) >= request &&
-			(!best || clean_size(best->mchunk_size) >
-			          clean_size(it->mchunk_size))) {
-			best = it;
-			if (clean_size(best->mchunk_size) == request)
-				return best;
-		}
-		it = move_tree(it, request);
-	}
-	return best;
-}
-
 void    split_chunk(chunk **free_tree, chunk *to_split, size_t request)
 {
 	size_t  full_size;
