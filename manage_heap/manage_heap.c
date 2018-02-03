@@ -79,7 +79,7 @@ void    show_alloc_mem() {
 	write(1, "----HEAP_START----\nbreak: ", 26);
 	put_addr(brk_addr);
 	write(1, "\n", 1);
-	/*dump_memory(last_chunk);*/
+	dump_memory(last_chunk);
 	write(1, "----HEAP_END----\n", 17);
 #else
 #endif
