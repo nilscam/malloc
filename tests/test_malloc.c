@@ -54,12 +54,12 @@ s_box *ramdom_free(s_box *list, int size)
     return list;
 }
 
-s_box    *clear_list(s_box *list)
+s_box    *clear_list(s_box *list, int rest)
 {
     s_box *tmp = list;
     int         size = size_list(list);
 
-    while(size > 0) {
+    while(size > rest) {
 	    list = ramdom_free(list, size);
             size -= 1;
     }
@@ -78,8 +78,24 @@ void tester(void)
 	    list = tmp;
     }
     write(1,"start clear\n", 12);
-    list = clear_list(list);
-    write(1, "list_cleared\n", 14);
+    list = clear_list(list, 10);
+	write(1, "list_cleared 1\n", 16);
+	cmpt_size = 0;
+	while (cmpt_size < 10000000) {
+		tmp = init_box();
+		tmp->next = list;
+		list = tmp;
+	}
+	list = clear_list(list, 50);
+	cmpt_size = 0;
+	write(1, "list_cleared 2\n", 16);
+	while (cmpt_size < 100000) {
+		tmp = init_box();
+		tmp->next = list;
+		list = tmp;
+	}
+	list = clear_list(list, 0);
+    write(1, "list_cleared 3\n", 16);
 }
 
 int main()

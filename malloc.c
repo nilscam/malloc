@@ -30,11 +30,11 @@ void	*malloc(size_t size)
 	void    *ptr;
 
 	dump_func;
+	show_alloc_mem();
 	trylock_thread();
-	show_alloc_mem();
 	ptr = allocate(size, &free_tree);
-	show_alloc_mem();
 	unlock_thread();
+	show_alloc_mem();
 	padd_debug;
 	return ptr;
 }
@@ -69,12 +69,12 @@ void    *calloc(size_t nmemb, size_t size)
 	dump_func;
 	if (request == 0)
 		return NULL;
-	trylock_thread();
 	show_alloc_mem();
+	trylock_thread();
 	ptr = allocate(request, &free_tree);
 	clear_mem(ptr);
-	show_alloc_mem();
 	unlock_thread();
+	show_alloc_mem();
 	padd_debug;
 	return ptr;
 }
@@ -83,11 +83,11 @@ void	free(void *mem)
 {
 	dump_func;
 	if (mem) {
+		show_alloc_mem();
 		trylock_thread();
-		show_alloc_mem();
 		discharge(mem, &free_tree);
-		show_alloc_mem();
 		unlock_thread();
+		show_alloc_mem();
 	}
 	padd_debug;
 }
