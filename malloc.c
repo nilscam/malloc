@@ -44,16 +44,19 @@ void    *realloc(void *mem, size_t size)
 	void    *ptr;
 
 	dump_func;
-	if (mem) {
-		trylock_thread();
-		show_alloc_mem();
+	show_alloc_mem();
+	trylock_thread();
+	if (mem)
 		discharge(mem, &free_tree);
+	if (size) {
 		ptr = allocate(size, &free_tree);
-		show_alloc_mem();
 		unlock_thread();
+		show_alloc_mem();
 		padd_debug;
 		return ptr;
 	}
+	unlock_thread();
+	show_alloc_mem();
 	padd_debug;
 	return NULL;
 }
