@@ -5,42 +5,86 @@
 ** 
 */
 
-#include <unistd.h>
-#include <stdlib.h>
-#include <stdio.h>
+#include "malloc.h"
 
-#define FULL 0xF
-#define MAX_OPTI_SIZE 0x3FFFFFFFFFFFFFFF
+static chunk  *free_tree = NULL;
 
-void	*heap_start;
-void    *heap_end;
+pthread_mutex_t		mutex = PTHREAD_MUTEX_INITIALIZER;
 
-size_t	my_opalloc(size_t n)
+void			*trylock_thread()
 {
-        size_t	nb = n - 1;
-	size_t	drop = 31;
+	if (pthread_mutex_trylock(&mutex) != 0)
+		exit(0);
+	return (NULL);
+}
 
-	if (n > MAX_OPTI_SIZE)
-		return n;
-	while (drop > 0)
-		nb |= nb >> drop--;
-	return (nb + 1) << 1;
+void			*unlock_thread()
+{
+	if (pthread_mutex_unlock(&mutex) != 0)
+		exit(0);
+	return (NULL);
 }
 
 void	*malloc(size_t size)
 {
-	printf("nb = %zu\n", my_opalloc(size));
+	void    *ptr;
 
-	heap_start = sbrk(0);
-
-	printf("brk = %d\n", brk(sbrk(100)));
-
-	//printf("brk = %d\n", brk(heap_start));
-	
-	return heap_start;
+	dump_func;
+	trylock_thread();
+	show_alloc_mem();
+	ptr = allocate(size, &free_tree);
+	show_alloc_mem();
+	unlock_thread();
+	padd_debug;
+	return ptr;
 }
 
-void	free(__attribute__((unused))void *data)
+void    *realloc(void *mem, size_t size)
 {
-	brk(heap_start);
+	void    *ptr;
+
+	dump_func;
+	if (mem) {
+		trylock_thread();
+		show_alloc_mem();
+		discharge(mem, &free_tree);
+		ptr = allocate(size, &free_tree);
+		show_alloc_mem();
+		unlock_thread();
+		padd_debug;
+		return ptr;
+	}
+	padd_debug;
+	return NULL;
+}
+
+void    *calloc(size_t nmemb, size_t size)
+{
+	size_t  request = nmemb * size;
+	void    *ptr;
+
+	dump_func;
+	if (request == 0)
+		return NULL;
+	trylock_thread();
+	show_alloc_mem();
+	ptr = allocate(request, &free_tree);
+	clear_mem(ptr);
+	show_alloc_mem();
+	unlock_thread();
+	padd_debug;
+	return ptr;
+}
+
+void	free(void *mem)
+{
+	dump_func;
+	if (mem) {
+		trylock_thread();
+		show_alloc_mem();
+		discharge(mem, &free_tree);
+		show_alloc_mem();
+		unlock_thread();
+	}
+	padd_debug;
 }
