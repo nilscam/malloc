@@ -1,4 +1,4 @@
-/*
+			/*
 * Created by nils on 1/26/18.
 */
 
@@ -83,17 +83,6 @@ typedef char mbool;
 		((long int)((char*)(chk)))))
 #define PREV(chk) ((chunk*)(((long int)((char*)(chk))) - \
 		clean_size((chk)->mchunk_prev_size)))
-#define move_tree(it, size_to_add) ((clean_size((it)->mchunk_size) > clean_size((size_to_add))) ? \
-					(it)->smaller : (it)->bigger)
-/* */
-
-/* chunk comparaisons */
-#define cmp_chunk_grt(chk1, chk2) (clean_size((chk1)->mchunk_size) > \
-					clean_size((chk2)->mchunk_size))
-#define cmp_chunk_lrt(chk1, chk2) (clean_size((chk1)->mchunk_size) < \
-					clean_size((chk2)->mchunk_size))
-#define cmp_chunk_lrt_oe(chk1, chk2) (clean_size((chk1)->mchunk_size) <= \
-					clean_size((chk2)->mchunk_size))
 /* */
 
 /* ptr/size conversion */
@@ -112,8 +101,6 @@ typedef char mbool;
 #define combine_size_chunk(first, second) ((clean_size((first)->mchunk_size))\
 				+ (clean_size((second)->mchunk_size))\
 				+ ((second)->mchunk_size & CHUNK_ALIGN_MASK))
-#define align_increase_heap(size, pagesize) (((size) + (pagesize) - 1) & ~((pagesize) - 1))
-#define align_reduce_heap(size, pagesize) ((size) & ~((pagesize) -1))
 /* */
 
 /* setters / conditions */
@@ -130,17 +117,18 @@ typedef char mbool;
 #define UNSET_USED(size_ptr) ((size_ptr) &= ~USED_MASK)
 /* */
 
-/* debug */
-#define print_header(chk) printf("+----------------------------------+\n\
-|%34lu|\n\
-|%34lu|\n\
-+----------------------------------+\n",\
-(chk)->mchunk_prev_size, (chk)->mchunk_size)
-/* */
+#include "btree/btree.h"
+#include "manage_heap/manage_heap.h"
 
 /* system */
 void    *sbrk(intptr_t titi);
 int     getpagesize(void);
+/* */
+
+/* DEBUG */
+void    dump_memory(chunk *);
+void    put_addr(void *);
+void    put_nbr(unsigned long int);
 /* */
 
 void    clear_mem(void *);
@@ -148,9 +136,6 @@ void    *allocate(size_t, chunk **);
 void    discharge(void *, chunk **);
 mbool   reduce_heap(chunk *);
 void    *increase_heap(size_t);
-chunk   *remove_from_tree(chunk *, chunk *);
-void    add_to_tree(chunk *, chunk **);
 void    show_alloc_mem();
-void    dump_memory(chunk *);
 
 #endif /*_malloc_H_*/
