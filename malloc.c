@@ -27,13 +27,15 @@ void			*unlock_thread()
 
 void	*malloc(size_t size)
 {
-	void    *ptr;
+	void    *ptr = NULL;
 
 	dump_func;
 	show_alloc_mem();
-	trylock_thread();
-	ptr = allocate(size, &free_tree);
-	unlock_thread();
+	if (size) {
+		trylock_thread();
+		ptr = allocate(size, &free_tree);
+		unlock_thread();
+	}
 	show_alloc_mem();
 	padd_debug;
 	return ptr;

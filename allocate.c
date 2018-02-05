@@ -31,17 +31,17 @@ void    split_chunk(chunk **free_tree, chunk *to_split, size_t request)
 	if (to_split->mchunk_size >= (request + MIN_CHUNK_SIZE)) {
 		full_size = clean_size(to_split->mchunk_size);
 		to_split->mchunk_size -= (full_size - request);
-		second = NEXT(to_split);
-		second->mchunk_prev_size = to_split->mchunk_size;
-		second->mchunk_size = (full_size - request);
-		SET_EXIST(to_split->mchunk_size);
 		UNSET_FREE(to_split->mchunk_size);
+		second = NEXT(to_split);
+		second->mchunk_size = (full_size - request);
+		second->mchunk_prev_size = to_split->mchunk_size;
 		SET_FREE(second->mchunk_size);
 		if (IS_EXIST(to_split->mchunk_size)) {
 			SET_EXIST(second->mchunk_size);
 			next = NEXT(second);
 			next->mchunk_prev_size = second->mchunk_size;
 		}
+		SET_EXIST(to_split->mchunk_size);
 		add_to_tree(second, free_tree);
 	} else {
 		UNSET_FREE(to_split->mchunk_size);
