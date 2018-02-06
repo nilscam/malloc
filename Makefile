@@ -8,6 +8,7 @@
 #-ansi -pedantic
 
 SRC	=	malloc.c	\
+		thread.c	\
 		free.c		\
 		allocate.c
 

@@ -1,5 +1,8 @@
-			/*
-* Created by nils on 1/26/18.
+/*
+** EPITECH PROJECT, 2018
+** malloc
+** File description:
+** a malloc implementation in c
 */
 
 #ifndef _malloc_H_
@@ -46,12 +49,11 @@
  */
 
 struct  s_chunk {
-	size_t  mchunk_prev_size;  /* Size of previous chunk (if free).  */
-	size_t	mchunk_size;       /* Size in bytes, including overhead. */
+	size_t	mchunk_prev_size;
+	size_t	mchunk_size;
 
-	/* Only if free */
-	struct s_chunk  *smaller;
-	struct s_chunk  *bigger;
+	struct s_chunk	*smaller;
+	struct s_chunk	*bigger;
 };
 
 typedef struct s_chunk chunk;
@@ -62,7 +64,6 @@ typedef char mbool;
 #define FAILURE 1
 /* */
 
-
 /* mask */
 #define CHUNK_ALIGN_MASK 0x7
 #define REVERSE_CHUNK_ALIGN_MASK ~0x7
@@ -72,8 +73,7 @@ typedef char mbool;
 /* */
 
 /* SIZE brute */
-/*#define CHUNK_HEADER_SIZE (offsetof(struct s_chunk, smaller))*/
-#define CHUNK_HEADER_SIZE 16
+#define CHUNK_HEADER_SIZE (offsetof(struct s_chunk, smaller))
 #define MIN_SIZE 16
 #define MIN_CHUNK_SIZE (MIN_SIZE + CHUNK_HEADER_SIZE)
 /* */
@@ -86,17 +86,18 @@ typedef char mbool;
 /* */
 
 /* ptr/size conversion */
-#define chunk2mem(p)   ((void*)((char*)(p) + CHUNK_HEADER_SIZE))
+#define chunk2mem(p) ((void*)((char*)(p) + CHUNK_HEADER_SIZE))
 #define mem2chunk(mem) ((chunk*)(((char*)(mem)) - CHUNK_HEADER_SIZE))
 #define schunk2smem(s) ((s) - CHUNK_HEADER_SIZE)
 #define smem2schunk(s) ((s) + CHUCK_HEADER_SIZE)
 #define clean_size(size) ((size) & REVERSE_CHUNK_ALIGN_MASK)
 /* */
 
-
 /* logic calcul */
-#define request2mem(size) (clean_size((size) + CHUNK_ALIGN_MASK) + CHUNK_HEADER_SIZE)
-#define request2chunk(size) (((request2mem(size)) > MIN_CHUNK_SIZE) ? request2mem(size) : MIN_CHUNK_SIZE)
+#define request2mem(size) (clean_size((size) + CHUNK_ALIGN_MASK) + \
+			CHUNK_HEADER_SIZE)
+#define request2chunk(size) (((request2mem(size)) > MIN_CHUNK_SIZE) ? \
+			request2mem(size) : MIN_CHUNK_SIZE)
 #define request_oor(size) ((size) >= (4000000000))
 #define combine_size_chunk(first, second) ((clean_size((first)->mchunk_size))\
 				+ (clean_size((second)->mchunk_size))\
@@ -121,21 +122,23 @@ typedef char mbool;
 #include "manage_heap/manage_heap.h"
 
 /* system */
-void    *sbrk(intptr_t titi);
-int     getpagesize(void);
+void	*sbrk(intptr_t titi);
+int	getpagesize(void);
 /* */
 
 /* DEBUG */
-void    dump_memory(chunk *);
-void    put_addr(void *);
-void    put_nbr(unsigned long int);
+void	dump_memory(chunk *);
+void	put_addr(void *);
+void	put_nbr(unsigned long int);
 /* */
 
-void    clear_mem(void *);
-void    *allocate(size_t, chunk **);
-void    discharge(void *, chunk **);
-mbool   reduce_heap(chunk *);
-void    *increase_heap(size_t);
-void    show_alloc_mem();
+void	clear_mem(void *);
+void	*allocate(size_t, chunk **);
+void	discharge(void *, chunk **);
+mbool	reduce_heap(chunk *);
+void	*increase_heap(size_t);
+void	show_alloc_mem();
+void	unlock_thread();
+void	lock_thread();
 
 #endif /*_malloc_H_*/

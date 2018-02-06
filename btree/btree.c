@@ -1,13 +1,16 @@
 /*
-* Created by nils on 2/3/18.
+** EPITECH PROJECT, 2018
+** malloc
+** File description:
+** a malloc implementation in c
 */
 
 #include "btree.h"
 
-chunk   *rebase_tree(chunk *root)
+chunk	*rebase_tree(chunk *root)
 {
-	chunk   *save = root;
-	chunk   *it = root->bigger;
+	chunk	*save = root;
+	chunk	*it = root->bigger;
 
 	if (!it->smaller) {
 		save->bigger = NULL;
@@ -21,9 +24,9 @@ chunk   *rebase_tree(chunk *root)
 	return it;
 }
 
-chunk   *remove_from_tree(chunk *root, chunk *to_remove)
+chunk	*remove_from_tree(chunk *root, chunk *to_remove)
 {
-	chunk   *tmp;
+	chunk	*tmp;
 
 	if (!to_remove || !root)
 		return root;
@@ -44,10 +47,10 @@ chunk   *remove_from_tree(chunk *root, chunk *to_remove)
 	return root;
 }
 
-void    add_to_tree(chunk *to_add, chunk **free_tree)
+void	add_to_tree(chunk *to_add, chunk **free_tree)
 {
-	chunk   *save = *free_tree;
-	chunk   *it = *free_tree;
+	chunk	*save = *free_tree;
+	chunk	*it = *free_tree;
 
 	to_add->bigger = NULL;
 	to_add->smaller = NULL;
@@ -65,15 +68,15 @@ void    add_to_tree(chunk *to_add, chunk **free_tree)
 	}
 }
 
-chunk   *search_best_spot(size_t request, chunk *root_tree)
+chunk	*search_best_spot(size_t request, chunk *root_tree)
 {
-	chunk   *it = root_tree;
-	chunk   *best = NULL;
+	chunk	*it = root_tree;
+	chunk	*best = NULL;
 
 	while (it && it->mchunk_size != request) {
 		if (clean_size(it->mchunk_size) >= request &&
-		    (!best || clean_size(best->mchunk_size) >
-		              clean_size(it->mchunk_size))) {
+			(!best || clean_size(best->mchunk_size) >
+			clean_size(it->mchunk_size))) {
 			best = it;
 			if (clean_size(best->mchunk_size) == request)
 				return best;

@@ -1,5 +1,8 @@
 /*
-* Created by nils on 2/3/18.
+** EPITECH PROJECT, 2018
+** malloc
+** File description:
+** a malloc implementation in c
 */
 
 #ifndef _btree_H_
@@ -20,9 +23,9 @@
 					clean_size((chk2)->mchunk_size))
 /* */
 
-chunk   *remove_from_tree(chunk *, chunk *);
-void    add_to_tree(chunk *, chunk **);
-chunk   *search_best_spot(size_t, chunk *);
-chunk   *rebase_tree(chunk *);
+chunk	*remove_from_tree(chunk *, chunk *);
+void	add_to_tree(chunk *, chunk **);
+chunk	*search_best_spot(size_t, chunk *);
+chunk	*rebase_tree(chunk *);
 
 #endif /* _btree_H_ */
