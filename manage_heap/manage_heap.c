@@ -78,7 +78,8 @@ void	*increase_heap(size_t request)
 	return ((char*)brk_addr) - request;
 }
 
-void	show_alloc_mem() {
+void	show_alloc_mem()
+{
 #ifdef M_DEBUG
 	write(1, "----HEAP_START----\nbreak: ", 26);
 	put_addr(brk_addr);
