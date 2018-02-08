@@ -8,7 +8,8 @@
 SRC	=	malloc.c	\
 		thread.c	\
 		free.c		\
-		allocate.c
+		allocate.c	\
+		getters.c
 
 MODULES	=	btree/btree.c			\
 			manage_heap/manage_heap.c	\

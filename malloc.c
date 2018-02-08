@@ -7,7 +7,12 @@
 
 #include "malloc.h"
 
-static chunk	*free_tree = NULL;
+static chunk	**get_free_tree()
+{
+	static chunk	*free_tree = NULL;
+
+	return &free_tree;
+}
 
 void	*malloc(size_t size)
 {
@@ -17,7 +22,7 @@ void	*malloc(size_t size)
 	show_alloc_mem();
 	if (size) {
 		lock_thread();
-		ptr = allocate(size, &free_tree);
+		ptr = allocate(size, get_free_tree());
 		unlock_thread();
 	}
 	show_alloc_mem();
@@ -33,9 +38,9 @@ void	*realloc(void *mem, size_t size)
 	show_alloc_mem();
 	lock_thread();
 	if (mem)
-		discharge(mem, &free_tree);
+		discharge(mem, get_free_tree());
 	if (size) {
-		ptr = allocate(size, &free_tree);
+		ptr = allocate(size, get_free_tree());
 		unlock_thread();
 		show_alloc_mem();
 		padd_debug;
@@ -57,7 +62,7 @@ void	*calloc(size_t nmemb, size_t size)
 		return NULL;
 	show_alloc_mem();
 	lock_thread();
-	ptr = allocate(request, &free_tree);
+	ptr = allocate(request, get_free_tree());
 	clear_mem(ptr);
 	unlock_thread();
 	show_alloc_mem();
@@ -71,7 +76,7 @@ void	free(void *mem)
 	if (mem) {
 		show_alloc_mem();
 		lock_thread();
-		discharge(mem, &free_tree);
+		discharge(mem, get_free_tree());
 		unlock_thread();
 		show_alloc_mem();
 	}

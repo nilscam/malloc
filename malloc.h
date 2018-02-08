@@ -102,6 +102,13 @@ void	put_addr(void *);
 void	put_nbr(unsigned long int);
 /* */
 
+/* getters */
+size_t	my_get_page_size();
+size_t	*my_get_page_padding();
+void	**get_brk_addr();
+chunk	**get_last_chunk();
+/* */
+
 void	clear_mem(void *);
 void	*allocate(size_t, chunk **);
 void	discharge(void *, chunk **);
