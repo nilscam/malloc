@@ -64,7 +64,7 @@ void	split_chunk(chunk **free_tree, chunk *to_split, size_t request)
 
 void	*allocate(size_t request, chunk **free_tree)
 {
-	chunk *best_spot;
+	chunk	*best_spot;
 
 	request = request2chunk(request);
 	if (request_oor(request)) {

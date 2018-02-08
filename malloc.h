@@ -18,36 +18,6 @@
 #include <zconf.h>
 #include <pthread.h>
 
-/*
- * Representation of a chunk
- *
- * +---------------------------+
- * |    Size of prev Chunk    |
- * +---------------------------+
- * |       Size of chunk      |
- * +---------------------------+
- * | row data : min size 8     |
- * | // if free                |
- * | // xor_link: a xor linked |
- * | // list implementation    |printf
- * +---------------------------+
- *
- * Size of chunk representation (4 bytes):
- * 11111111111111111111111111111[A][B][C]
- * 3 lowers bits are used to stock information about the chunk
- *
- * A: 1 if the chunk is used by a thread
- *    0 otherwise
- *
- * B: 1 if the chunk is used
- *    0 if the chunk is free
- *
- * C: 1 if there is a next/prev chunk
- *    0 otherwise
- *
- * if B is set to 1, the row data contain a xor_link
- */
-
 struct  s_chunk {
 	size_t	mchunk_prev_size;
 	size_t	mchunk_size;
