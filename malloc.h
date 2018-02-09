@@ -103,10 +103,10 @@ void	put_nbr(unsigned long int);
 /* */
 
 /* getters */
-size_t	my_page_size();
-size_t	*my_get_page_padding();
-void	**get_brk_addr();
-chunk	**get_last_chunk();
+size_t	my_page_size(void);
+size_t	*my_get_page_padding(void);
+void	**get_brk_addr(void);
+chunk	**get_last_chunk(void);
 /* */
 
 void	clear_mem(void *);
@@ -114,8 +114,8 @@ void	*allocate(size_t, chunk **);
 void	discharge(void *, chunk **);
 mbool	reduce_heap(chunk *);
 void	*increase_heap(size_t);
-void	show_alloc_mem();
-void	unlock_thread();
-void	lock_thread();
+void	show_alloc_mem(void);
+void	unlock_thread(void);
+void	lock_thread(void);
 
 #endif /*_malloc_H_*/

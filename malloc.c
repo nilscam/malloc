@@ -7,7 +7,7 @@
 
 #include "malloc.h"
 
-static chunk	**get_free_tree()
+static chunk	**get_free_tree(void)
 {
 	static chunk	*free_tree = NULL;
 

@@ -7,7 +7,7 @@
 
 #include "malloc.h"
 
-size_t	my_page_size()
+size_t	my_page_size(void)
 {
 	static size_t	page_size = 0;
 
@@ -16,14 +16,14 @@ size_t	my_page_size()
 	return page_size;
 }
 
-size_t	*my_get_page_padding()
+size_t	*my_get_page_padding(void)
 {
 	static size_t	page_padding = 0;
 
 	return &page_padding;
 }
 
-void	**get_brk_addr()
+void	**get_brk_addr(void)
 {
 	static void	*brk_addr = NULL;
 
@@ -32,7 +32,7 @@ void	**get_brk_addr()
 	return &brk_addr;
 }
 
-chunk	**get_last_chunk()
+chunk	**get_last_chunk(void)
 {
 	static chunk	*last_chunk = NULL;
 
