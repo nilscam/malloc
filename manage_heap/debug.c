@@ -21,7 +21,8 @@ void	put_addr(void *addr)
 	put_nbr((unsigned long int)(addr));
 }
 
-void	dump_memory(chunk *last_chunk) {
+void	dump_memory(chunk *last_chunk)
+{
 	if (last_chunk) {
 		if (IS_EXIST(last_chunk->mchunk_prev_size))
 			dump_memory(PREV(last_chunk));
