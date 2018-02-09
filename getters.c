@@ -7,7 +7,7 @@
 
 #include "malloc.h"
 
-size_t	my_get_page_size()
+size_t	my_page_size()
 {
 	static size_t	page_size = 0;
 

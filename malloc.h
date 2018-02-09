@@ -103,7 +103,7 @@ void	put_nbr(unsigned long int);
 /* */
 
 /* getters */
-size_t	my_get_page_size();
+size_t	my_page_size();
 size_t	*my_get_page_padding();
 void	**get_brk_addr();
 chunk	**get_last_chunk();
