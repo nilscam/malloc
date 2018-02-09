@@ -6,7 +6,6 @@
 */
 
 #include "manage_heap.h"
-#define DIGITS "0123456789"
 
 void	put_nbr(unsigned long int nb)
 {

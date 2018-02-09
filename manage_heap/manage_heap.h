@@ -26,6 +26,7 @@
 /* */
 
 /* debug */
+#define DIGITS "0123456789"
 #define print_header(chk) do {\
 	write(1, "+--------------START---------------+\n", 37);\
 	put_nbr(((unsigned long int)((chk)->mchunk_size)));\
